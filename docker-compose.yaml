@@ -1,0 +1,28 @@
+version: '3'
+services:
+  counter-mongo:
+    image: mongo:4.0.8
+    container_name: counter-mongo
+    restart: always
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGODB_DATA_DIR: ${MONGODB_DATA_DIR}
+      MONDODB_LOG_DIR: ${MONDODB_LOG_DIR}
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodbdata:${MONGODB_DATA_DIR}
+  counter-web:
+    build: .
+    container_name: counter-web
+    ports:
+      - '5001:5001'
+    volumes:
+      - ./app:/app
+    environment:
+      FLASK_ENV: development
+volumes:
+  mongodbdata:
